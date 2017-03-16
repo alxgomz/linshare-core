@@ -40,6 +40,7 @@ import java.util.List;
 import org.linagora.linshare.core.exception.BusinessException;
 import org.linagora.linshare.core.facade.webservice.common.dto.DocumentAttachement;
 import org.linagora.linshare.core.facade.webservice.common.dto.MimeTypeDto;
+import org.linagora.linshare.core.facade.webservice.user.dto.CmisDto;
 import org.linagora.linshare.core.facade.webservice.user.dto.DocumentDto;
 
 public interface DocumentFacade extends GenericFacade {
@@ -53,6 +54,9 @@ public interface DocumentFacade extends GenericFacade {
 
 	DocumentDto create(File tempFile, String fileName,
 			String description, String metadata) throws BusinessException;
+
+	DocumentDto create(CmisDto dto)
+			throws BusinessException;
 
 	DocumentDto createWithSignature(File tempFile, String fileName,
 			String description, InputStream signatureFile, String signatureFileName, InputStream x509certificate) throws BusinessException;

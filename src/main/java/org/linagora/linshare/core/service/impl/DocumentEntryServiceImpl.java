@@ -57,6 +57,7 @@ import org.linagora.linshare.core.domain.entities.OperationHistory;
 import org.linagora.linshare.core.domain.entities.ShareEntry;
 import org.linagora.linshare.core.domain.entities.StringValueFunctionality;
 import org.linagora.linshare.core.domain.entities.SystemAccount;
+import org.linagora.linshare.core.domain.entities.User;
 import org.linagora.linshare.core.domain.objects.MailContainerWithRecipient;
 import org.linagora.linshare.core.domain.objects.TimeUnitValueFunctionality;
 import org.linagora.linshare.core.exception.BusinessErrorCode;
@@ -186,6 +187,27 @@ public class DocumentEntryServiceImpl
 		return create(actor, owner, tempFile, fileName, comment, false, isFromCmis, metadata);
 	}
 
+
+	@Override
+	public DocumentEntry create(User actor, User owner, String url, Long size, String fileName, String description, String mimeType) {
+		preChecks(actor, owner);
+		Validate.notEmpty(fileName, "fileName is required.");
+		checkCreatePermission(actor, owner, DocumentEntry.class,
+				BusinessErrorCode.DOCUMENT_ENTRY_FORBIDDEN, null);
+		DocumentEntry docEntry = null;
+		fileName = sanitizeFileName(fileName);
+		
+		// TODO check if the file MimeType is allowed
+		
+		docEntry = documentEntryBusinessService.create(owner,
+				url, size, fileName, description,
+				mimeType,
+				getDocumentExpirationDate(owner.getDomain()));
+		DocumentEntryAuditLogEntry log = new DocumentEntryAuditLogEntry(actor, owner, docEntry, LogAction.CREATE);
+		logEntryService.insert(log);
+		return docEntry;
+	}
+		
 	@Override
 	public DocumentEntry create(Account actor, Account owner, File tempFile, String fileName, String comment,
 			boolean forceAntivirusOff, boolean isFromCmis, String metadata) throws BusinessException {

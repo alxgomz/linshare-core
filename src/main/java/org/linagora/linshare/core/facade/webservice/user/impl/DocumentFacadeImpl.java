@@ -58,6 +58,7 @@ import org.linagora.linshare.core.facade.webservice.common.dto.DocumentAttacheme
 import org.linagora.linshare.core.facade.webservice.common.dto.MimeTypeDto;
 import org.linagora.linshare.core.facade.webservice.common.dto.ShareDto;
 import org.linagora.linshare.core.facade.webservice.user.DocumentFacade;
+import org.linagora.linshare.core.facade.webservice.user.dto.CmisDto;
 import org.linagora.linshare.core.facade.webservice.user.dto.DocumentDto;
 import org.linagora.linshare.core.service.AccountService;
 import org.linagora.linshare.core.service.DocumentEntryService;
@@ -279,6 +280,22 @@ public class DocumentFacadeImpl extends UserGenericFacadeImp implements
 
 		documentEntryService.updateFileProperties(actor, actor, res.getUuid(),
 				res.getName(), description, null);
+		return new DocumentDto(res);
+	}
+
+	@Override
+	public DocumentDto create(CmisDto dto) throws BusinessException {
+		Validate.notNull(dto, "Missing required DocumentDto");
+		Validate.notEmpty(dto.getFileName(), "Missing required fileName");
+		Validate.notEmpty(dto.getUrl(), "Missing required URL");
+		Validate.notNull(dto.getSize(), "Missing required size");
+		Validate.notEmpty(dto.getMimeType(), "Missing required mime-type");
+		User actor = checkAuthentication();
+		if ((actor.isGuest() && !actor.getCanUpload()))
+			throw new BusinessException(BusinessErrorCode.WEBSERVICE_FORBIDDEN,
+					"You are not authorized to use this service");
+		DocumentEntry res = documentEntryService.create(actor, actor, dto.getUrl(), dto.getSize(),
+				dto.getFileName(), dto.getDescription(), dto.getMimeType());
 		return new DocumentDto(res);
 	}
 }
