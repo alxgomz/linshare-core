@@ -66,6 +66,7 @@ import org.linagora.linshare.core.facade.webservice.user.AccountQuotaFacade;
 import org.linagora.linshare.core.facade.webservice.user.AsyncTaskFacade;
 import org.linagora.linshare.core.facade.webservice.user.DocumentAsyncFacade;
 import org.linagora.linshare.core.facade.webservice.user.DocumentFacade;
+import org.linagora.linshare.core.facade.webservice.user.dto.CmisDto;
 import org.linagora.linshare.core.facade.webservice.user.dto.DocumentDto;
 import org.linagora.linshare.webservice.WebserviceBase;
 import org.linagora.linshare.webservice.annotations.NoCache;
@@ -292,7 +293,7 @@ public class DocumentRestServiceImpl extends WebserviceBase implements DocumentR
 		DocumentDto documentDto = documentFacade.find(uuid, false);
 		InputStream documentStream = documentFacade.getDocumentStream(uuid);
 		ResponseBuilder response = DocumentStreamReponseBuilder.getDocumentResponseBuilder(documentStream,
-				documentDto.getName(), documentDto.getType(), documentDto.getSize());
+				documentDto.getName(), documentDto.getType(), null);
 		return response.build();
 	}
 
@@ -340,5 +341,23 @@ public class DocumentRestServiceImpl extends WebserviceBase implements DocumentR
 					BusinessErrorCode.MODE_MAINTENANCE_ENABLED,
 					"Maintenance mode is enable, uploads are disabled.");
 		}
+	}
+
+	@Path("/")
+	@POST
+	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@ApiOperation(value = "Create a document which represents a CMIS reference", response = DocumentDto.class)
+	@ApiResponses({
+			@ApiResponse(code = 403, message = "Current logged in account does not have the delegation role."),
+			@ApiResponse(code = 404, message = "Document not found."),
+			@ApiResponse(code = 400, message = "Bad request : missing required fields."),
+			@ApiResponse(code = 500, message = "Internal server error."), })
+	@Override
+	public DocumentDto create(
+			@ApiParam(value = "The cmis dto.", required = true)
+				CmisDto dto
+			) throws BusinessException {
+		return documentFacade.create(dto);
 	}
 }

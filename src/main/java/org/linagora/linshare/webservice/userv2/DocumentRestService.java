@@ -42,6 +42,7 @@ import javax.ws.rs.core.Response;
 import org.apache.cxf.jaxrs.ext.multipart.MultipartBody;
 import org.linagora.linshare.core.exception.BusinessException;
 import org.linagora.linshare.core.facade.webservice.common.dto.AsyncTaskDto;
+import org.linagora.linshare.core.facade.webservice.user.dto.CmisDto;
 import org.linagora.linshare.core.facade.webservice.user.dto.DocumentDto;
 
 public interface DocumentRestService {
@@ -54,6 +55,9 @@ public interface DocumentRestService {
 			MultipartBody body)
 			throws BusinessException;
 
+	DocumentDto create(CmisDto dto)
+			throws BusinessException;
+	
 	DocumentDto find(String uuid, boolean withShares) throws BusinessException;
 
 	void head(String uuid) throws BusinessException;
