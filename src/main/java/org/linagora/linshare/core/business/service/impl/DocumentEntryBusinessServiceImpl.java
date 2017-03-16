@@ -69,6 +69,7 @@ import org.linagora.linshare.core.domain.entities.Signature;
 import org.linagora.linshare.core.domain.entities.Thread;
 import org.linagora.linshare.core.domain.entities.ThreadEntry;
 import org.linagora.linshare.core.domain.entities.UploadRequestEntry;
+import org.linagora.linshare.core.domain.entities.User;
 import org.linagora.linshare.core.domain.objects.FileMetaData;
 import org.linagora.linshare.core.exception.BusinessErrorCode;
 import org.linagora.linshare.core.exception.BusinessException;
@@ -123,6 +124,24 @@ public class DocumentEntryBusinessServiceImpl implements DocumentEntryBusinessSe
 		this.thumbEnabled = thumbEnabled;
 		this.pdfThumbEnabled = pdfThumbEnabled;
 		this.deduplication = deduplication;
+	}
+
+	@Override
+	public DocumentEntry create(User owner, String url, Long size, String fileName, String description, String mimeType,
+			Calendar expirationDate) {
+		// add an entry for the file in DB
+		DocumentEntry entity = null;
+		Document document = new Document(size, mimeType, url);
+		document.setSha256sum("cmis");
+		document = documentRepository.create(document);
+		if (description == null)
+			description = "";
+		DocumentEntry docEntry = new DocumentEntry(owner, fileName, description, document);
+		// We need to set an expiration date in case of file cleaner activation.
+		docEntry.setExpirationDate(expirationDate);
+		entity = documentEntryRepository.create(docEntry);
+		owner.getEntries().add(entity);
+		return docEntry;
 	}
 
 	@Override

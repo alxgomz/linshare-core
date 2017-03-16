@@ -39,6 +39,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 import org.linagora.linshare.core.domain.objects.FileMetaData;
 import org.linagora.linshare.core.utils.DocumentUtils;
@@ -131,6 +132,18 @@ public class Document implements Serializable {
 		this.thmbUuid = null;
 		this.checkMimeType = false;
 		this.bucketUuid = metadata.getBucketUuid();
+	}
+
+	public Document(Long size, String mimeType, String url) {
+		super();
+		this.uuid = UUID.randomUUID().toString();
+		this.type = mimeType;
+		this.creationDate = new GregorianCalendar();
+		this.size = size;
+		this.timeStamp = null;
+		this.thmbUuid = null;
+		this.checkMimeType = false;
+		this.bucketUuid = url;
 	}
 
 	@Deprecated

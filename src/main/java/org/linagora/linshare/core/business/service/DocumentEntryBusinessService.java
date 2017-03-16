@@ -47,6 +47,7 @@ import org.linagora.linshare.core.domain.entities.Entry;
 import org.linagora.linshare.core.domain.entities.ShareEntry;
 import org.linagora.linshare.core.domain.entities.Thread;
 import org.linagora.linshare.core.domain.entities.ThreadEntry;
+import org.linagora.linshare.core.domain.entities.User;
 import org.linagora.linshare.core.exception.BusinessException;
 
 public interface DocumentEntryBusinessService {
@@ -127,4 +128,7 @@ public interface DocumentEntryBusinessService {
 
 	void deleteDocument(Document document)
 			throws BusinessException;
+
+	DocumentEntry create(User owner, String url, Long size, String fileName, String description,
+			String mimeType, Calendar documentExpirationDate);
 }
