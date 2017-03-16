@@ -730,6 +730,17 @@
 			<artifactId>chemistry-opencmis-server-bindings</artifactId>
 			<version>0.11.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.chemistry.opencmis</groupId>
+			<artifactId>chemistry-opencmis-client-api</artifactId>
+			<version>0.11.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.chemistry.opencmis</groupId>
+			<artifactId>chemistry-opencmis-client-impl</artifactId>
+			<version>0.11.0</version>
+		</dependency>
+		
 		<!-- include jmx term inside war for easy distribution -->
 		<dependency>
 			<groupId>org.cyclopsgroup</groupId>
